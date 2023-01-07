@@ -1,0 +1,15 @@
+{
+  "name": "livestore",
+  "version": "1.0.0",
+  "description": "Control a shared and subscribable store between frontend and backend Javascript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.11.0"
+  }
+}
