@@ -1,6 +1,6 @@
 const _ATOM_PROTO = {
     $subscribable: "atom",
-    data: {},
+    value: null,
     subscribers: [],
     subscribe(fn, skippable = false) {
         if (skippable) {
