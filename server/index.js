@@ -1,9 +1,9 @@
 const WebSocketServer = require("ws")
-const { observable } = require("./observable")
+const { store } = require("../shared/index")
 
 class LiveStoreServer {
     constructor(baseObject, websocketOptions = {}) {
-        this.store = observable(baseObject)
+        this.store = store(baseObject)
         this._initStore()
         this._initWebSocket(websocketOptions)
     }

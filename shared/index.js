@@ -1,6 +1,5 @@
-const ATOM_PROTO = {
-    $observable: true,
-    $type: "atom",
+const _ATOM_PROTO = {
+    $subscribable: "atom",
     data: {},
     subscribers: [],
     subscribe(fn, skippable = false) {
@@ -26,9 +25,17 @@ const ATOM_PROTO = {
     }
 }
 
-const OBSERVABLE_PROTO = {
-    $observable: true,
-    $type: "observable",
+function atom(value) {
+    const _atom = Object.create(_ATOM_PROTO)
+
+    _atom.value = value
+    _atom.subscribers = []
+
+    return _atom
+}
+
+const _STORE_PROTO = {
+    $subscribable: "store",
     data: {},
     subscribers: [],
     subscribe(fn) {
@@ -51,44 +58,39 @@ const OBSERVABLE_PROTO = {
     }
 }
 
-function atom(value) {
-    const _atom = Object.create(ATOM_PROTO)
+function store(object) {
+    const _store = Object.create(_STORE_PROTO)
 
-    _atom.value = value
-    _atom.subscribers = []
-
-    return _atom
-}
-
-function observable(object) {
-    const _observable = Object.create(OBSERVABLE_PROTO)
-
-    _observable.subscribers = []
-    _observable.data = {}
+    _store.subscribers = []
+    _store.data = {}
     for (let key in object) {
-        let value = object[key]
-        if (!value.$observable) {
-            value = typeof value === "object" ? observable(value) : atom(value)
-        }
+        let value = _makeSubscribable(object[key])
         value.subscribe((value, path) => {
             if (path) {
-                _observable.notify(value, `${key}.${path}`)
+                _store.notify(value, `${key}.${path}`)
             } else {
-                _observable.notify(value, key)
+                _store.notify(value, key)
             }
         })
-        _observable.data[key] = value
+        _store.data[key] = value
     }
 
 
-    return new Proxy(_observable, {
+    return new Proxy(_store, {
         get(target, prop) {
-            if (prop in OBSERVABLE_PROTO) return target[prop]
+            if (prop in _STORE_PROTO) return target[prop]
             return target.data[prop]
         }
     })
 }
 
+function _makeSubscribable(item) {
+    if (!item.$subscribable) {
+        return typeof item === "object" ? store(item) : atom(item)
+    }
+    return item
+}
+
 if (typeof module !== "undefined") {
-    module.exports = { atom, observable }
+    module.exports = { atom, store }
 }
