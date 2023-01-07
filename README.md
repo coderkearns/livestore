@@ -16,7 +16,7 @@ Live Store has three parts: the shared reactivity code, the frontend code, and t
 
 ### Shared
 
-There are two reactivity primitives: `atom`s and `observable`s.
+There are two reactivity primitives: `atom`s and `store`s.
 
 #### Atoms
 
@@ -40,14 +40,14 @@ name.set("George Doe") // nothing logged, but the internal value changes
 console.log(name.get()) // => George Doe
 ```
 
-#### Observables
+#### Stores
 
-An `observable` is similar to an `atom` with an array of subscribers, but it mimics the behavior of an object. All values in the object are converted to `atom`s, and it recursively turns sub-objects into other `observable`s.
+An `store` is similar to an `atom` with an array of subscribers, but it mimics the behavior of an object. All values in the object are converted to `atom`s, and it recursively turns sub-objects into other `store`s.
 
-It should be noted that `observable`s are technically Javascript `Proxy` objects so you can use keys like `get` and `subscribers` without overriding.
+It should be noted that `store`s are technically Javascript `Proxy` objects so you can use keys like `get` and `subscribers` without overriding.
 
 ```javascript
-const settings = observable({
+const settings = store({
     name: "John Doe",
     values: {
         a: 1,
@@ -55,7 +55,7 @@ const settings = observable({
     }
 })
 
-settings.get() // returns a non-reactive copy of the observable
+settings.get() // returns a non-reactive copy of the store
 
 const unsubscribe = settings.subscribe((newValue, path) => {
     console.log(`Value at path '${path}' changed to ${newValue}`)
@@ -70,7 +70,7 @@ settings.values.a.set(3) // => Value at path 'values.a' changed to 3
 console.log(settings.values.a.get()) // => 3
 ```
 
-**As a caveat, arrays are not yet supported in `observable`s and will cause problems.**
+**As a caveat, arrays are not yet supported in `store`s and will cause problems.**
 
 ### Frontend
 
@@ -92,7 +92,7 @@ const settings = new ListStoreClient("ws://localhost:3000")
 await settings.ready
 ```
 
-4. Use the `store.store` as any other observable
+4. Use the `store.store` as any other store
 
 ```javascript
 settings.store.name.set("Jane Doe")
@@ -126,6 +126,6 @@ settings.store.name.set("Jane Doe")
 
 ## Todo List
 
-- [ ] Handle arrays in `observable`
+- [ ] Handle arrays in `store`
 - [ ] Simple example usage
 - [ ] Example usage with Express.js
