@@ -7,7 +7,7 @@ Control a shared and subscribable store between frontend and backend Javascript!
 Live Store doesn't have an npm package yet, so install it directly from this repo:
 
 ```shell
-$ npm install -s git+git+https://git@github.com/coderkearns/livestore
+$ npm install -s git+https://git@github.com/coderkearns/livestore
 ```
 
 ## Usage
