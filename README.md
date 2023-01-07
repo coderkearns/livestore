@@ -92,7 +92,7 @@ const settings = new ListStoreClient("ws://localhost:3000")
 await settings.ready
 ```
 
-4. Use the `store.store` as any other store
+4. Use the `.store` attribute as any other store
 
 ```javascript
 settings.store.name.set("Jane Doe")
